@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RizRok 3D - Zamówienie</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
+
+  header {
+    background: #007BFF;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+
+  .produkt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .produkt img {
+    width: 300px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .produkt-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  label { margin-top: 15px; font-weight: bold; display: block; }
+  input, select {
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover { background-color: #0056b3; }
+
+  #opinia {
+    display: none;
+    margin-top: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+
+  .stars input { display: none; }
+  .stars label { font-size: 2em; color: #ccc; cursor: pointer; transition: 0.2s; }
+  .stars input:checked ~ label,
+  .stars label:hover,
+  .stars label:hover ~ label { color: gold; }
+
+  footer { text-align: center; margin-top: 50px; color: #777; }
+</style>
+</head>
+<body>
+
+<header>RizRok 3D</header>
+
+<main>
+  <div class="produkt">
+    <img src="https://images.unsplash.com/photo-1606813905505-bf0f229b779c?auto=format&fit=crop&w=500&q=80" alt="Produkt 3D">
+    <div class="produkt-info">
+      <h2>Twój produkt 3D</h2>
+      <p>Wypełnij dane i złóż zamówienie.</p>
+
+      <label>Imię i nazwisko:</label>
+      <input type="text" id="imie" placeholder="Jan Kowalski">
+
+      <label>Adres:</label>
+      <input type="text" id="adres" placeholder="ul. Przykładowa 1, 00-000 Miasto">
+
+      <label>Kolor:</label>
+      <select id="kolor">
+        <option value="Czarny">Czarny</option>
+        <option value="Biały">Biały</option>
+        <option value="Czerwony">Czerwony</option>
+        <option value="Niebieski">Niebieski</option>
+        <option value="Szary">Szary</option>
+        <option value="Zielony">Zielony</option>
+        <option value="Żółty">Żółty</option>
+        <option value="Mystery">Mystery</option>
+      </select>
+
+      <label>Ilość sztuk:</label>
+      <input type="number" id="ilosc" min="1" value="1">
+
+      <button id="zamowBtn">Zamów</button>
+    </div>
+  </div>
+
+  <div id="opinia">
+    <h2>Wystaw opinię</h2>
+    <p>Jak oceniasz produkt?</p>
+    <div class="stars">
+      <input type="radio" name="rating" id="star5" value="5"><label for="star5">&#9733;</label>
+      <input type="radio" name="rating" id="star4" value="4"><label for="star4">&#9733;</label>
+      <input type="radio" name="rating" id="star3" value="3"><label for="star3">&#9733;</label>
+      <input type="radio" name="rating" id="star2" value="2"><label for="star2">&#9733;</label>
+      <input type="radio" name="rating" id="star1" value="1"><label for="star1">&#9733;</label>
+    </div>
+    <button id="wyslijOpiniaBtn">Wyślij opinię</button>
+  </div>
+</main>
+
+<footer>© 2025 RizRok 3D. Wszystkie prawa zastrzeżone.</footer>
+
+<script>
+document.getElementById('zamowBtn').addEventListener('click', function() {
+  const imie = document.getElementById('imie').value.trim();
+  const adres = document.getElementById('adres').value.trim();
+  const kolor = document.getElementById('kolor').value;
+  const ilosc = document.getElementById('ilosc').value;
+
+  if(!imie || !adres) {
+    alert("Proszę wypełnić imię i adres.");
+    return;
+  }
+
+  const subject = encodeURIComponent("Nowe zamówienie - RizRok 3D");
+  const body = encodeURIComponent(`Zamówienie:\nImię i nazwisko: ${imie}\nAdres: ${adres}\nKolor: ${kolor}\nIlość: ${ilosc}`);
+
+  window.location.href = `mailto:rizrok.3d.print@gmail.com?subject=${subject}&body=${body}`;
+  document.getElementById('opinia').style.display = 'block';
+});
+
+document.getElementById('wyslijOpiniaBtn').addEventListener('click', function() {
+  const gwiazdki = document.querySelector('input[name="rating"]:checked')?.value || "0";
+
+  const subject = encodeURIComponent("Nowa opinia - RizRok 3D");
+  const body = encodeURIComponent(`Opinia:\nOcena: ${gwiazdki}`);
+
+  window.location.href = `mailto:rizrok.3d.print@gmail.com?subject=${subject}&body=${body}`;
+});
+</script>
+
+</body>
+</html>
